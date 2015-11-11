@@ -291,7 +291,7 @@ class MenuBar(object):
         add_screen = AddAliasScreen(window)
 
 
-class UIdogTag(object):
+class UIIDComponent(object):
     def __init__(self, component, reference_id, subsection):
         super().__init__()
         self.component = component
@@ -318,11 +318,11 @@ class CustomPanedWindow(UIObject):
         if from_array_to_labels:
             for cell in array:
                 label = ttk.Label(self.group, text=cell)
-                self.components.append(UIdogTag(component=label,
+                self.components.append(UIIDComponent(component=label,
                                                 reference_id=reference_id, subsection=subsection))
                 self.group.add(label)
         else:
-            self.components.append(UIdogTag(component=component, reference_id=reference_id, subsection=subsection))
+            self.components.append(UIIDComponent(component=component, reference_id=reference_id, subsection=subsection))
 
             self.group.add(component_frame)
 
