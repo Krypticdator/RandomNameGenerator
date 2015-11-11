@@ -13,6 +13,7 @@ Base = declarative_base()
 from sqlalchemy import Column, Integer, String, Boolean
 from sqlalchemy.orm import sessionmaker
 
+
 class NameTable(Base):
     __tablename__ = 'name_table'
     id = Column(Integer, primary_key=True)
@@ -89,16 +90,16 @@ class NameTable(Base):
 
     def get_males(self):
         c = self.get_class()
-        query = self.session.query(c) . \
-            filter(c.gender == 'male') . \
+        query = self.session.query(c). \
+            filter(c.gender == 'male'). \
             filter(c.name_group == "default")
         instance = query.all()
         return instance
 
     def get_females(self):
         c = self.get_class()
-        query = self.session.query(c) . \
-            filter(c.gender == 'female') . \
+        query = self.session.query(c). \
+            filter(c.gender == 'female'). \
             filter(c.name_group == "default")
         instance = query.all()
         return instance
@@ -110,8 +111,8 @@ class NameTable(Base):
         if group and gender:
             print(group)
             print(gender)
-            query = self.session.query(c) . \
-                filter(c.gender == gender) . \
+            query = self.session.query(c). \
+                filter(c.gender == gender). \
                 filter(c.name_group == group)
             # instance = query.all()
 
@@ -119,7 +120,7 @@ class NameTable(Base):
             # print(instance)
             # print("query with group and gender")
         elif group:
-            query = self.session.query(c) . \
+            query = self.session.query(c). \
                 filter(c.name_group == group)
         instance = query.all()
         # print(instance[0].group)
@@ -131,17 +132,22 @@ class NameTable(Base):
         table = str(self.type)
         return "<" + table + "(name='%s', group='%s', gender='%s')>" % (self.name, self.name_group, self.gender)
 
+
 class FirstNames(NameTable):
     __mapper_args__ = {'polymorphic_identity': 'first_names'}
+
 
 class LastNames(NameTable):
     __mapper_args__ = {'polymorphic_identity': 'last_names'}
 
+
 class FirstAliases(NameTable):
     __mapper_args__ = {'polymorphic_identity': 'first_aliases'}
 
+
 class LastAliases(NameTable):
     __mapper_args__ = {'polymorphic_identity': 'last_aliases'}
+
 
 class dbManager(object):
     def __init__(self):
@@ -158,11 +164,12 @@ class dbManager(object):
         self.first_aliases.set_session(self.session)
         self.last_aliases.set_session(self.session)
 
-        self.databases = {'first_names':self.first_names, 'last_names':self.last_names,
-                          'first_aliases':self.first_aliases, 'last_aliases':self.last_aliases}
+        self.databases = {'first_names': self.first_names, 'last_names': self.last_names,
+                          'first_aliases': self.first_aliases, 'last_aliases': self.last_aliases}
 
     def __del__(self):
         self.session.close()
+
 
 class UIObject(object):
     '''Base class for all user interface components'''
@@ -172,6 +179,7 @@ class UIObject(object):
         self.contr = controller
 
         self.frame.grid(column=0, row=0)
+
 
 class Dice(object):
     def __init__(self, dices:int, sides:int):
@@ -186,12 +194,15 @@ class Dice(object):
             result = self.last_roll
         return result
 
+
 class TableRow(object):
     def __init__(self, data:{}):
         super().__init__()
         self.data = data
+
     def add(self, name, value):
         self.data[name] = value
+
 
 class TableModel(object):
     def __init__(self):
@@ -201,7 +212,7 @@ class TableModel(object):
     def add_row(self, name:str, data:TableRow):
         self.rows[name] = data
 
-    def load_table(self, table_name:str, gender_filter:str = None, group_filter:str = None):
+    def load_table(self, table_name:str, gender_filter:str=None, group_filter:str=None):
         db = dbManager()
         dbtable = db.databases[table_name]
         table_data = object()
@@ -213,11 +224,12 @@ class TableModel(object):
 
         i = 0
         for instance in table_data:
-            row = TableRow({'id':instance.id, 'name':instance.name, 'group':instance.name_group, 'gender':instance.gender})
+            row = TableRow(
+                {'id': instance.id, 'name': instance.name, 'group': instance.name_group, 'gender': instance.gender})
             self.add_row(i, row)
-            i = i + 1
+            i += 1
 
-        # print(str(self.rows[0].data))
+            # print(str(self.rows[0].data))
 
     def load_gender(self, gender):
         db = dbManager()
@@ -229,14 +241,14 @@ class TableModel(object):
             table_data = dbtable.get_males()
         i = 0
         for instance in table_data:
-            row = TableRow({'id':instance.id, 'name':instance.name, 'group':instance.name_group, 'gender':instance.gender})
+            row = TableRow(
+                {'id': instance.id, 'name': instance.name, 'group': instance.name_group, 'gender': instance.gender})
             self.add_row(i, row)
-            i = i + 1
+            i += 1
 
         if len(self.rows) == 0:
             print('error loading gender ' + gender)
         print('i was handled ' + str(i) + ' times')
-
 
 
     def get_random_choice(self) -> TableRow:
@@ -279,7 +291,6 @@ class MenuBar(object):
         add_screen = AddAliasScreen(window)
 
 
-
 class UIdogTag(object):
     def __init__(self, component, reference_id, subsection):
         super().__init__()
@@ -306,7 +317,7 @@ class CustomPanedWindow(UIObject):
             array=None):
         if from_array_to_labels:
             for cell in array:
-                label = ttk.Label(self.group, text = cell)
+                label = ttk.Label(self.group, text=cell)
                 self.components.append(UIdogTag(component=label,
                                                 reference_id=reference_id, subsection=subsection))
                 self.group.add(label)
@@ -344,6 +355,7 @@ class CustomRadioGroup(UIObject):
             radioButton.configure(command=self.command)
         self.pane.add(reference_id=text, component=radioButton, component_frame=radioButton, subsection='radio')
 
+
 class LabelAndValue(UIObject):
     '''label combined with another label reserved for changing value'''
 
@@ -361,6 +373,7 @@ class LabelAndValue(UIObject):
 
     def get(self):
         return self.variable.get()
+
 
 class TextAndEntryfield(UIObject):
     '''Basic textlabel combined with entry-widged'''
@@ -388,11 +401,10 @@ class TextAndEntryfield(UIObject):
             value = self.variable.get()
             if value != self.last_value:
                 self.command()
-                #print('value: ' + value)
+                # print('value: ' + value)
 
     def get(self):
         return self.variable.get()
-
 
 
 class MainScreen(UIObject):
@@ -464,28 +476,30 @@ class importScreen(UIObject):
         db = dbManager()
         db.databases[self.lbl_db_name.get()].add_all(names, group=self.lbl_group.get(), gender=self.lbl_gender.get())
 
-    def read_file(self, filepath):
+    @staticmethod
+    def read_file(filepath):
         f = open(filepath, 'r')
         array = []
         for line in f:
-           row = line.strip()
-           array.append(row)
+            row = line.strip()
+            array.append(row)
         f.close()
         return array
+
 
 class CountScreen(UIObject):
     def __init__(self, master):
         super().__init__(master, controller=None)
         self.elements = {}
-        db =  dbManager()
-        row_num=0
+        db = dbManager()
+        row_num = 0
         for key, value in db.databases.items():
             self.elements[key] = ttk.Label(self.frame, text=key)
             self.elements[key].grid(column=0, row=row_num)
             number_of_names = len(db.databases[key].get_all())
             self.elements[key + 'value'] = ttk.Label(self.frame, text=str(number_of_names))
             self.elements[key + 'value'].grid(column=1, row=row_num)
-            row_num = row_num + 1
+            row_num += 1
 
         self.females = ttk.Label(self.frame, text='female names')
         self.males = ttk.Label(self.frame, text='male names')
@@ -494,9 +508,10 @@ class CountScreen(UIObject):
         self.fem_count = ttk.Label(self.frame, text=fems)
         self.men_count = ttk.Label(self.frame, text=males)
         self.females.grid(column=0, row=row_num + 1)
-        self.fem_count.grid(column=1, row=row_num +1)
-        self.males.grid(column=0, row=row_num +2)
-        self.men_count.grid(column=1, row=row_num +2)
+        self.fem_count.grid(column=1, row=row_num + 1)
+        self.males.grid(column=0, row=row_num + 2)
+        self.men_count.grid(column=1, row=row_num + 2)
+
 
 class AddAliasScreen(UIObject):
     def __init__(self, master):
@@ -506,25 +521,27 @@ class AddAliasScreen(UIObject):
         self.lbl_lalias = TextAndEntryfield(self.frame, 'last', command=self.search_last, trace=True, width_num=25)
         self.lbl_lresult = LabelAndValue(self.frame, None, 'result', value_length=15)
 
-        self.bnt_save_first = ttk.Button(self.frame, text = 'save', command=self.save_first)
-        self.btn_save_last = ttk.Button(self.frame, text = 'save', command=self.save_last)
+        self.bnt_save_first = ttk.Button(self.frame, text='save', command=self.save_first)
+        self.btn_save_last = ttk.Button(self.frame, text='save', command=self.save_last)
 
-        self.lbl_falias.frame.grid(column=0, row=0, sticky=(N,W))
-        self.lbl_fresult.frame.grid(column=0, row=1, sticky= (N, W))
+        self.lbl_falias.frame.grid(column=0, row=0, sticky=(N, W))
+        self.lbl_fresult.frame.grid(column=0, row=1, sticky=(N, W))
         self.bnt_save_first.grid(column=1, row=0)
 
-        self.lbl_lalias.frame.grid(column=0, row=2, sticky=(N,W))
+        self.lbl_lalias.frame.grid(column=0, row=2, sticky=(N, W))
         self.lbl_lresult.frame.grid(column=0, row=3, sticky=(N, W))
         self.btn_save_last.grid(column=1, row=2)
 
     def search_first(self):
         db = dbManager()
-        instance = db.first_aliases.search(self.lbl_falias.variable.get(), group='default', gender='all', case_sensitive=False)
+        instance = db.first_aliases.search(self.lbl_falias.variable.get(), group='default', gender='all',
+                                           case_sensitive=False)
         self.lbl_fresult.variable.set(instance)
 
     def search_last(self):
         db = dbManager()
-        instance = db.last_aliases.search(self.lbl_lalias.variable.get(), group='default', gender='all', case_sensitive=False)
+        instance = db.last_aliases.search(self.lbl_lalias.variable.get(), group='default', gender='all',
+                                          case_sensitive=False)
         self.lbl_lresult.variable.set(instance)
 
     def save_first(self):
@@ -536,6 +553,7 @@ class AddAliasScreen(UIObject):
         db = dbManager()
         db.last_aliases.add_name(self.lbl_lalias.variable.get(), group='default', gender='all')
         self.search_last()
+
 
 def main():
     root = Tk()
