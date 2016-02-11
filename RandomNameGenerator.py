@@ -1,16 +1,29 @@
 __author__ = 'Toni'
 
-from tkinter import *
-from tkinter import ttk
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import and_
-from random import randrange
-from TkinterComponentFactory import TextAndEntryfield
-from TkinterComponentFactory import LabelAndValue
-from TkinterComponentFactory import CustomRadioGroup
-from TkinterComponentFactory import CustomPanedWindow
+try:
+    from tkinter import *
+    from tkinter import ttk
+except ImportError:
+    print('cant import tkinter')
 
+try:
+    from sqlalchemy import create_engine
+    from sqlalchemy.ext.declarative import declarative_base
+    from sqlalchemy import and_
+except ImportError:
+    print('cant import sqlAlchemy')
+from random import randrange
+try:
+    from TkinterComponentFactory import TextAndEntryfield
+    from TkinterComponentFactory import LabelAndValue
+    from TkinterComponentFactory import CustomRadioGroup
+    from TkinterComponentFactory import CustomPanedWindow
+except ImportError:
+    print('cant import TkinterComponentFactory')
+try:
+    from cpAttributes import Skill
+except ImportError:
+    print('cant import cpAttributes')
 
 
 engine = create_engine('sqlite:///generator_database.db', echo=False)
@@ -19,6 +32,13 @@ Base = declarative_base()
 from sqlalchemy import Column, Integer, String, Boolean
 from sqlalchemy.orm import sessionmaker
 from SQLAlchemyBaseClass import DefaultTableOperations
+
+class CharacterTable(Base, DefaultTableOperations):
+    __tablename__ = "characters"
+    character_id = Column(Integer, primary_key=True)
+    fname = Column(String)
+    lname = Column(String)
+    gender = Column(String)
 
 class NameTable(Base, DefaultTableOperations):
     __tablename__ = 'name_table'
@@ -278,6 +298,7 @@ class MainScreen(UIObject):
         self.lbl_fname.frame.grid(column=0, row=1)
         self.lbl_falias.frame.grid(column=0, row=2)
         self.btn_rnd.grid(column=0, row=3)
+        self.frame.grid(row=0, column=0, sticky = (N, E, W, S))
 
         self.male_fnames = TableModel()
         self.female_fnames = TableModel()
