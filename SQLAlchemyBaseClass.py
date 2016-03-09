@@ -6,7 +6,6 @@ from sqlalchemy.ext.declarative import declarative_base
 engine = None
 Base = declarative_base()
 
-from sqlalchemy import Column, Integer, String, Boolean
 from sqlalchemy.orm import sessionmaker
 
 class DefaultTableOperations(object):
