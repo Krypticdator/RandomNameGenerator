@@ -39,6 +39,12 @@ class CharacterTable(Base, DefaultTableOperations):
     fname = Column(String)
     lname = Column(String)
     gender = Column(String)
+    alias = Column(String)
+
+    def add(self, fname, lname, gender, alias):
+
+        self.get_class()(fname=fname, lname=lname, gender=gender, alias=alias)
+        # should maybe add more stuff?
 
 class NameTable(Base, DefaultTableOperations):
     __tablename__ = 'name_table'
