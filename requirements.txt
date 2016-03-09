@@ -1,0 +1,2 @@
+-e git+https://github.com/Krypticdator/TkinterGuickComponentFactory.git#egg=TkinterGuickComponentFactory
+-e git+https://github.com/Krypticdator/SQLAlchemyBaseClass.git#egg=SQLAlchemyBaseClass
