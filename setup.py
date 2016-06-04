@@ -4,7 +4,7 @@ __author__ = 'Toni'
 
 from distutils.core import setup
 
-setup(name='cpAttributes',
+setup(name='RandomNameGenerator',
       version='0.1.2',
       description='random name generator',
       author='Toni Nurmi',
