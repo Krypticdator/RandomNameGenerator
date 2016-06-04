@@ -46,7 +46,7 @@ class NameTable(Base, DefaultTableOperations):
         row = self.get_class()(name=name, name_group=group, gender=gender)
         self.add_and_commit(row)
 
-    def add_all(self, names:[], group='default', gender='male'):
+    def add_all(self, names, group='default', gender='male'):
         array = []
         for name in names:
             instance = self.get_class()(name=name, name_group=group, gender=gender)
@@ -90,7 +90,7 @@ class NameTable(Base, DefaultTableOperations):
         instance = query.all()
         return instance
 
-    def filter_by(self, group:str, gender:str):
+    def filter_by(self, group, gender):
         c = self.get_class()
         print(str(c))
         query = object()
@@ -161,12 +161,12 @@ class dbManager(object):
 
 
 class Dice(object):
-    def __init__(self, dices:int, sides:int):
+    def __init__(self, dices, sides):
         self.dices = dices
         self.sides = sides
         self.last_roll = 0
 
-    def roll(self, use_randrange=True) -> int:
+    def roll(self, use_randrange=True):
         result = 0
         if use_randrange:
             self.last_roll = sum(randrange(self.sides) + 1 for die in range(self.dices))
@@ -175,7 +175,7 @@ class Dice(object):
 
 
 class TableRow(object):
-    def __init__(self, data:{}):
+    def __init__(self, data):
         self.data = data
 
     def add(self, name, value):
@@ -187,10 +187,10 @@ class TableModel(object):
 
         self.rows = {}
 
-    def add_row(self, name:str, data:TableRow):
+    def add_row(self, name, data:TableRow):
         self.rows[name] = data
 
-    def load_table(self, table_name:str, gender_filter:str=None, group_filter:str=None):
+    def load_table(self, table_name, gender_filter=None, group_filter=None):
         db = dbManager()
         dbtable = db.databases[table_name]
         table_data = object()
@@ -229,7 +229,7 @@ class TableModel(object):
         print('i was handled ' + str(i) + ' times')
 
 
-    def get_random_choice(self) -> TableRow:
+    def get_random_choice(self):
         row_count = len(self.rows)
         dice = Dice(1, row_count - 1)
         num = dice.roll()
@@ -241,6 +241,7 @@ class TableModel(object):
 
 def main():
     db_manager = dbManager()
+    model = TableModel()
 
 
 if __name__ == '__main__':
