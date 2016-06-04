@@ -1,4 +1,6 @@
+from __future__ import print_function
 __author__ = 'Toni'
+
 
 try:
     from tkinter import *
@@ -20,10 +22,7 @@ try:
     from TkinterComponentFactory import CustomPanedWindow
 except ImportError:
     print('cant import TkinterComponentFactory')
-try:
-    from cpAttributes import Skill
-except ImportError:
-    print('cant import cpAttributes')
+
 
 
 engine = create_engine('sqlite:///generator_database.db', echo=False)
